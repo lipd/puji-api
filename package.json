@@ -1,0 +1,19 @@
+{
+  "name": "puji-api",
+  "version": "1.0.0",
+  "description": "谱记 RESTful API",
+  "main": "index.js",
+  "author": "lipd",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "koa": "^2.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
+  },
+  "scripts": {
+    "dev": "nodemon index.js"
+  }
+}
