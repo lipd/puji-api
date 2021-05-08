@@ -1,24 +1,16 @@
 const Router = require('koa-router')
+const controller = require('../controllers/users')
+
 const router = new Router({ prefix: '/users' })
 
-router.get('/', (ctx) => {
-  ctx.body = 'user list'
-})
+router.get('/', controller.find)
 
-router.get('/:id', (ctx) => {
-  ctx.body = `user id is ${ctx.params.id}`
-})
+router.get('/:id', controller.findById)
 
-router.post('/:id', (ctx) => {
-  ctx.body = `user id is ${ctx.params.id}`
-})
+router.post('/:id', controller.create)
 
-router.put('/:id', (ctx) => {
-  ctx.body = `user id is ${ctx.params.id}`
-})
+router.put('/:id', controller.update)
 
-router.delete('/:id', (ctx) => {
-  ctx.status = 204
-})
+router.delete('/:id', controller.delete)
 
 module.exports = router
