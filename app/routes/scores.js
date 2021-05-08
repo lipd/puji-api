@@ -7,7 +7,7 @@ router.get('/', controller.find)
 
 router.get('/:id', controller.findById)
 
-router.post('/:id', controller.create)
+router.post('/', controller.create)
 
 router.put('/:id', controller.update)
 
