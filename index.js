@@ -1,9 +1,11 @@
 const Koa = require('koa')
-const app = new Koa()
+const bodyParser = require('koa-bodyparser')
+const routing = require('./routes')
 
-app.use((ctx) => {
-  ctx.body = 'Hello World'
-})
+const app = new Koa()
+app.use(bodyParser())
+
+routing(app)
 
 app.listen(3005, () => {
   console.log('server is running on http://localhost:3005')
