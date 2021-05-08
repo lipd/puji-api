@@ -2,7 +2,6 @@
   "name": "puji-api",
   "version": "1.0.0",
   "description": "谱记 RESTful API",
-  "main": "index.js",
   "author": "lipd",
   "license": "MIT",
   "private": true,
@@ -21,7 +20,7 @@
     "prettier": "^2.2.1"
   },
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "cross-env NODE_ENV=production node app"
+    "dev": "nodemon app/index.js",
+    "start": "cross-env NODE_ENV=production node app/index.js"
   }
 }
