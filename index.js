@@ -1,7 +1,19 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const error = require('koa-json-error')
+const parameter = require('koa-parameter')
+const mongoose = require('mongoose')
 const routing = require('./routes')
+const { connectionUrl, port } = require('./config')
+
+mongoose.connect(
+  connectionUrl,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log('MongoDB has connected')
+  },
+)
+mongoose.connection.on('err', console.error)
 
 const app = new Koa()
 app.use(
@@ -11,9 +23,10 @@ app.use(
   }),
 )
 app.use(bodyParser())
+app.use(parameter(app))
 
 routing(app)
 
-app.listen(3005, () => {
+app.listen(port, () => {
   console.log('server is running on http://localhost:3005')
 })
