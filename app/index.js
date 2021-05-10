@@ -8,7 +8,7 @@ const { connectionUrl, port } = require('./config')
 
 mongoose.connect(
   connectionUrl,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
   () => {
     console.log('MongoDB has connected')
   },
