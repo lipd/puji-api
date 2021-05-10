@@ -1,21 +1,38 @@
+const User = require('../models/users')
+
 class UsersController {
-  find(ctx) {
-    ctx.body = 'user list'
+  async find(ctx) {
+    ctx.body = await User.find()
   }
 
-  findById(ctx) {
-    ctx.body = `user id is ${ctx.params.id}`
+  async findById(ctx) {
+    const user = await User.findById(ctx.params.id)
+    if (!user) {
+      ctx.throw(404, '用户不存在')
+    }
+    ctx.body = user
   }
 
-  create(ctx) {
-    ctx.body = `user id is ${ctx.params.id}`
+  async create(ctx) {
+    ctx.verifyParams({
+      name: { type: 'string', required: true },
+    })
+    const user = await new User(ctx.request.body).save()
+    ctx.body = user
   }
 
-  update(ctx) {
-    ctx.body = `user id is ${ctx.params.id}`
+  async update(ctx) {
+    ctx.verifyParams({
+      name: { type: 'string', required: true },
+    })
+    const user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body)
+    if (!user) ctx.throw(404, '用户不存在')
+    ctx.body = user
   }
 
-  delete(ctx) {
+  async delete(ctx) {
+    const user = await User.findByIdAndRemove(ctx.params.id)
+    if (!user) ctx.throw(404, '用户不存在')
     ctx.status = 204
   }
 }
