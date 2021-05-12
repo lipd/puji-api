@@ -1,10 +1,18 @@
 const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const error = require('koa-json-error')
 const parameter = require('koa-parameter')
 const mongoose = require('mongoose')
+let OSS = require('ali-oss')
 const routing = require('./routes')
-const { connectionUrl, port } = require('./config')
+const path = require('path')
+const {
+  connectionUrl,
+  port,
+  cloudRegion,
+  cloudId,
+  cloudSecret,
+} = require('./config')
 
 mongoose.connect(
   connectionUrl,
@@ -16,13 +24,35 @@ mongoose.connect(
 mongoose.connection.on('err', console.error)
 
 const app = new Koa()
+
+let client = new OSS({
+  region: cloudRegion,
+  accessKeyId: cloudId,
+  accessKeySecret: cloudSecret,
+})
+client.useBucket('puji-api')
+
+app.use(async (ctx, next) => {
+  ctx.oss = client
+  await next()
+})
+
 app.use(
   error({
     postFormat: (err, { stack, ...rest }) =>
       process.env.NODE_ENV === 'production' ? rest : { stack, rest },
   }),
 )
-app.use(bodyParser())
+
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      uploadDir: path.join(__dirname, '/public/uploads'),
+      keepExtensions: true,
+    },
+  }),
+)
 app.use(parameter(app))
 
 routing(app)

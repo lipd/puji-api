@@ -6,11 +6,12 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "ali-oss": "^6.15.2",
     "cross-env": "^7.0.3",
     "dotenv": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.1",
-    "koa-bodyparser": "^4.3.0",
+    "koa-body": "^4.2.0",
     "koa-json-error": "^3.1.2",
     "koa-jwt": "^4.0.1",
     "koa-parameter": "^3.0.1",
