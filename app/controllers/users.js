@@ -17,6 +17,7 @@ class UsersController {
     ctx.verifyParams({
       name: { type: 'string', required: true },
       password: { type: 'string', required: true },
+      avatar: { type: 'string', required: false },
     })
     const { name } = ctx.request.body
     const repeatedUser = await User.findOne({ name })
@@ -29,6 +30,7 @@ class UsersController {
     ctx.verifyParams({
       name: { type: 'string', required: false },
       password: { type: 'string', required: false },
+      avatar: { type: 'string', required: false },
     })
     const user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body)
     if (!user) ctx.throw(404, '用户不存在')

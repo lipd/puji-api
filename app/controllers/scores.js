@@ -1,21 +1,52 @@
+const Score = require('../models/scores')
+
 class ScoresController {
-  find(ctx) {
-    ctx.body = 'score list'
+  async find(ctx) {
+    ctx.body = await Score.find()
   }
 
-  findById(ctx) {
-    ctx.body = `score id is ${ctx.params.id}`
+  async findById(ctx) {
+    const score = await Score.findById(ctx.params.id)
+    if (!score) {
+      ctx.throw(404, '乐谱不存在')
+    }
+    ctx.body = score
   }
 
-  create(ctx) {
-    ctx.body = `score id is ${ctx.params.id}`
+  async create(ctx) {
+    ctx.verifyParams({
+      name: { type: 'string', required: true },
+      xmlUrl: { type: 'string', required: true },
+      cover: { type: 'string', required: true },
+      author: { type: 'string', required: true },
+      instruments: { type: 'array', itemType: 'string', required: false },
+      genres: { type: 'array', itemType: 'string', required: false },
+      lisences: { type: 'array', itemType: 'string', required: false },
+      headline: { type: 'string', required: false },
+    })
+    const score = await new Score(ctx.request.body).save()
+    ctx.body = score
   }
 
-  update(ctx) {
-    ctx.body = `score id is ${ctx.params.id}`
+  async update(ctx) {
+    ctx.verifyParams({
+      name: { type: 'string', required: false },
+      xmlUrl: { type: 'string', required: false },
+      cover: { type: 'string', required: false },
+      author: { type: 'string', required: false },
+      instruments: { type: 'array', itemType: 'string', required: false },
+      genres: { type: 'array', itemType: 'string', required: false },
+      lisences: { type: 'array', itemType: 'string', required: false },
+      headline: { type: 'string', required: false },
+    })
+    const score = await Score.findByIdAndUpdate(ctx.params.id, ctx.request.body)
+    if (!score) ctx.throw(404, '乐谱不存在')
+    ctx.body = score
   }
 
-  delete(ctx) {
+  async delete(ctx) {
+    const score = await Score.findByIdAndRemove(ctx.params.id)
+    if (!score) ctx.throw(404, '乐谱不存在')
     ctx.status = 204
   }
 }
