@@ -11,9 +11,15 @@ class ScoresController {
     })
     const user = await User.findOne(ctx.request.body)
     if (!user) ctx.throw(401, '用户名或密码不正确')
-    const { _id, name } = user
-    const token = jwt.sign({ _id, name }, secret, { expiresIn: '3d' })
+    const { _id } = user
+    const token = jwt.sign({ _id }, secret, { expiresIn: '3d' })
     ctx.body = { token }
+  }
+
+  async register(ctx) {
+    const { _id, name, avatar } = ctx.body
+    const token = jwt.sign({ _id }, secret, { expiresIn: '3d' })
+    ctx.body = { _id, name, avatar, token }
   }
 }
 

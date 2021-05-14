@@ -13,7 +13,7 @@ class UsersController {
     ctx.body = user
   }
 
-  async create(ctx) {
+  async create(ctx, next) {
     ctx.verifyParams({
       name: { type: 'string', required: true },
       password: { type: 'string', required: true },
@@ -23,7 +23,9 @@ class UsersController {
     const repeatedUser = await User.findOne({ name })
     if (repeatedUser) ctx.throw(409, '用户已经存在')
     const user = await new User(ctx.request.body).save()
+    ctx.state.user = user
     ctx.body = user
+    await next()
   }
 
   async update(ctx) {
