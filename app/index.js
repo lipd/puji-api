@@ -2,6 +2,7 @@ const Koa = require('koa')
 const koaBody = require('koa-body')
 const error = require('koa-json-error')
 const parameter = require('koa-parameter')
+const cors = require('@koa/cors')
 const mongoose = require('mongoose')
 let OSS = require('ali-oss')
 const routing = require('./routes')
@@ -40,7 +41,7 @@ app.use(async (ctx, next) => {
 app.use(
   error({
     postFormat: (err, { stack, ...rest }) =>
-      process.env.NODE_ENV === 'production' ? rest : { stack, rest },
+      process.env.NODE_ENV === 'production' ? rest : { stack, ...rest },
   }),
 )
 
@@ -54,6 +55,7 @@ app.use(
   }),
 )
 app.use(parameter(app))
+app.use(cors())
 
 routing(app)
 
