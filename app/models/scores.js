@@ -9,7 +9,7 @@ const scoreSchema = new Schema(
     author: { type: String, required: true },
     instruments: { type: [{ type: String }], required: false },
     genres: { type: [{ type: String }], required: false },
-    lisences: {
+    licenses: {
       type: [
         {
           type: String,
