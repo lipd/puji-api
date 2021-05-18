@@ -1,12 +1,22 @@
 const Score = require('../models/scores')
 
+const sorter = [
+  undefined,
+  { createdAt: 1 },
+  { createdAt: -1 },
+  { likes: -1 },
+  { favorites: -1 },
+]
+
 class ScoresController {
   async find(ctx) {
     const match = {}
     const query = ctx.query
     const page = ctx.query.page && 1
+    const order = ctx.query.order
+
     Object.keys(ctx.query)
-      .filter((each) => each !== 'page')
+      .filter((each) => each !== 'page' && each !== 'order')
       .forEach((key) => {
         match[key] = { $all: query[key].split(',') }
       })
@@ -14,6 +24,11 @@ class ScoresController {
     const scores = await Score.find(match)
       .limit(9)
       .skip(page * 9)
+      .sort(sorter[order])
+
+    // if (order && sorter[order]) {
+    //   scores.sort(sorter[order])
+    // }
 
     const total = await Score.count()
 
