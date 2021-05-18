@@ -26,11 +26,7 @@ class ScoresController {
       .skip(page * 9)
       .sort(sorter[order])
 
-    // if (order && sorter[order]) {
-    //   scores.sort(sorter[order])
-    // }
-
-    const total = await Score.count()
+    const total = await Score.countDocuments(match)
 
     ctx.body = {
       content: scores,
