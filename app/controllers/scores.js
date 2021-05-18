@@ -17,12 +17,12 @@ class ScoresController {
     ctx.verifyParams({
       name: { type: 'string', required: true },
       xmlUrl: { type: 'string', required: true },
-      cover: { type: 'string', required: true },
+      cover: { type: 'string', required: false },
       author: { type: 'string', required: true },
       instruments: { type: 'array', itemType: 'string', required: false },
       genres: { type: 'array', itemType: 'string', required: false },
       lisences: { type: 'array', itemType: 'string', required: false },
-      headline: { type: 'string', required: false },
+      description: { type: 'string', required: false },
     })
     const score = await new Score(ctx.request.body).save()
     ctx.body = score
@@ -37,7 +37,7 @@ class ScoresController {
       instruments: { type: 'array', itemType: 'string', required: false },
       genres: { type: 'array', itemType: 'string', required: false },
       lisences: { type: 'array', itemType: 'string', required: false },
-      headline: { type: 'string', required: false },
+      description: { type: 'string', required: false },
     })
     const score = await Score.findByIdAndUpdate(ctx.params.id, ctx.request.body)
     if (!score) ctx.throw(404, '乐谱不存在')
