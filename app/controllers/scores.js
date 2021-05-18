@@ -2,7 +2,13 @@ const Score = require('../models/scores')
 
 class ScoresController {
   async find(ctx) {
-    ctx.body = await Score.find()
+    const match = {}
+    const query = ctx.query
+    Object.keys(ctx.query).forEach((key) => {
+      match[key] = { $all: query[key].split(',') }
+    })
+
+    ctx.body = await Score.find(match)
   }
 
   async findById(ctx) {
@@ -21,7 +27,7 @@ class ScoresController {
       author: { type: 'string', required: true },
       instruments: { type: 'array', itemType: 'string', required: false },
       genres: { type: 'array', itemType: 'string', required: false },
-      lisences: { type: 'array', itemType: 'string', required: false },
+      licenses: { type: 'array', itemType: 'string', required: false },
       description: { type: 'string', required: false },
     })
     const score = await new Score(ctx.request.body).save()
@@ -36,7 +42,7 @@ class ScoresController {
       author: { type: 'string', required: false },
       instruments: { type: 'array', itemType: 'string', required: false },
       genres: { type: 'array', itemType: 'string', required: false },
-      lisences: { type: 'array', itemType: 'string', required: false },
+      licenses: { type: 'array', itemType: 'string', required: false },
       description: { type: 'string', required: false },
     })
     const score = await Score.findByIdAndUpdate(ctx.params.id, ctx.request.body)
