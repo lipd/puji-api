@@ -4,11 +4,23 @@ class ScoresController {
   async find(ctx) {
     const match = {}
     const query = ctx.query
-    Object.keys(ctx.query).forEach((key) => {
-      match[key] = { $all: query[key].split(',') }
-    })
+    const page = ctx.query.page && 1
+    Object.keys(ctx.query)
+      .filter((each) => each !== 'page')
+      .forEach((key) => {
+        match[key] = { $all: query[key].split(',') }
+      })
 
-    ctx.body = await Score.find(match)
+    const scores = await Score.find(match)
+      .limit(9)
+      .skip(page * 9)
+
+    const total = await Score.count()
+
+    ctx.body = {
+      content: scores,
+      total,
+    }
   }
 
   async findById(ctx) {
