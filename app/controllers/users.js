@@ -103,6 +103,27 @@ class UsersController {
 
     ctx.status = 204
   }
+
+  async like(ctx) {
+    const user = await User.findById(ctx.state.user._id).select('+likings')
+    if (!user.likings.map((id) => id.toString()).includes(ctx.params.id)) {
+      user.likings.push(ctx.params.id)
+      user.save()
+    }
+
+    ctx.status = 204
+  }
+
+  async unlike(ctx) {
+    const user = await User.findById(ctx.state.user._id).select('+likings')
+    const index = user.likings.map((id) => id.toString()).indexOf(ctx.params.id)
+    if (index > -1) {
+      user.likings.splice(index, 1)
+      user.save()
+    }
+
+    ctx.status = 204
+  }
 }
 
 module.exports = new UsersController()

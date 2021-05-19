@@ -9,6 +9,10 @@ const userSchema = new Schema({
     type: [{ type: Schema.Types.ObjectId, ref: 'Score' }],
     select: false,
   },
+  likings: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Score' }],
+    select: false,
+  },
 })
 
 module.exports = model('User', userSchema)

@@ -18,6 +18,10 @@ router.delete('/:id', auth, checkOwner, controller.delete)
 
 router.put('/favorite/:id', auth, controller.favorite)
 
-router.put('/unfavorite/:id', auth, controller.unfavorite)
+router.delete('/favorite/:id', auth, controller.unfavorite)
+
+router.put('/liking/:id', auth, controller.like)
+
+router.delete('/liking/:id', auth, controller.unlike)
 
 module.exports = router
