@@ -14,12 +14,17 @@ class ScoresController {
     const query = ctx.query
     const page = ctx.query.page && 1
     const order = ctx.query.order
+    const q = ctx.query.q
 
     Object.keys(ctx.query)
-      .filter((each) => each !== 'page' && each !== 'order')
+      .filter((each) => each !== 'page' && each !== 'order' && each !== 'q')
       .forEach((key) => {
         match[key] = { $all: query[key].split(',') }
       })
+
+    if (q) {
+      match['$or'] = [{ name: new RegExp(q) }, { author: new RegExp(q) }]
+    }
 
     const scores = await Score.find(match)
       .limit(9)
