@@ -1,4 +1,5 @@
 const Score = require('../models/scores')
+const User = require('../models/users')
 
 const sorter = [
   undefined,
@@ -40,7 +41,7 @@ class ScoresController {
   }
 
   async findById(ctx) {
-    const score = await Score.findById(ctx.params.id)
+    const score = await Score.findById(ctx.params.id).populate('uploader')
     if (!score) {
       ctx.throw(404, '乐谱不存在')
     }
@@ -58,7 +59,10 @@ class ScoresController {
       licenses: { type: 'array', itemType: 'string', required: false },
       description: { type: 'string', required: false },
     })
-    const score = await new Score(ctx.request.body).save()
+    const score = await new Score({
+      ...ctx.request.body,
+      uploader: ctx.state.user._id,
+    }).save()
     ctx.body = score
   }
 

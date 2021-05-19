@@ -20,6 +20,7 @@ const scoreSchema = new Schema(
     description: { type: String },
     favorites: { type: Number, default: 0 },
     likes: { type: Number, default: 0 },
+    uploader: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     timestamps: true,
