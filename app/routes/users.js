@@ -8,10 +8,16 @@ router.get('/', controller.find)
 
 router.get('/:id', controller.findById)
 
+router.get('/:id/favorites', auth, controller.findFavorites)
+
 // router.post('/', controller.create)
 
 router.patch('/:id', auth, checkOwner, controller.update)
 
 router.delete('/:id', auth, checkOwner, controller.delete)
+
+router.put('/favorite/:id', auth, controller.favorite)
+
+router.put('/unfavorite/:id', auth, controller.unfavorite)
 
 module.exports = router

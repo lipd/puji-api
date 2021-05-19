@@ -1,5 +1,13 @@
 const User = require('../models/users')
 
+const sorter = [
+  undefined,
+  { createdAt: 1 },
+  { createdAt: -1 },
+  { likes: -1 },
+  { favorites: -1 },
+]
+
 class UsersController {
   async find(ctx) {
     ctx.body = await User.find()
@@ -11,6 +19,34 @@ class UsersController {
       ctx.throw(404, '用户不存在')
     }
     ctx.body = user
+  }
+
+  async findFavorites(ctx) {
+    const match = {}
+    const query = ctx.query
+    const page = ctx.query.page && 1
+    const order = ctx.query.order
+
+    Object.keys(ctx.query)
+      .filter((each) => each !== 'page' && each !== 'order' && each !== 'q')
+      .forEach((key) => {
+        match[key] = { $all: query[key].split(',') }
+      })
+
+    const user = await User.findById(ctx.params.id)
+      .select('+favorites')
+      .populate({ path: 'favorites', match, options: { sort: sorter[order] } })
+      .limit(9)
+      .skip(page * 9)
+
+    if (!user) {
+      ctx.throw(404, '用户不存在')
+    }
+
+    ctx.body = {
+      content: user.favorites,
+      total: 1,
+    }
   }
 
   async create(ctx, next) {
@@ -42,6 +78,29 @@ class UsersController {
   async delete(ctx) {
     const user = await User.findByIdAndRemove(ctx.params.id)
     if (!user) ctx.throw(404, '用户不存在')
+    ctx.status = 204
+  }
+
+  async favorite(ctx) {
+    const user = await User.findById(ctx.state.user._id).select('+favorites')
+    if (!user.favorites.map((id) => id.toString()).includes(ctx.params.id)) {
+      user.favorites.push(ctx.params.id)
+      user.save()
+    }
+
+    ctx.status = 204
+  }
+
+  async unfavorite(ctx) {
+    const user = await User.findById(ctx.state.user._id).select('+favorites')
+    const index = user.favorites
+      .map((id) => id.toString())
+      .indexOf(ctx.params.id)
+    if (index > -1) {
+      user.favorites.splice(index, 1)
+      user.save()
+    }
+
     ctx.status = 204
   }
 }
