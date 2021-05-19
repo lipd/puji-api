@@ -40,6 +40,34 @@ class ScoresController {
     }
   }
 
+  async findMine(ctx) {
+    const match = {}
+    const userId = ctx.state.user._id
+    const query = ctx.query
+    const page = ctx.query.page && 1
+    const order = ctx.query.order
+
+    Object.keys(ctx.query)
+      .filter((each) => each !== 'page' && each !== 'order' && each !== 'q')
+      .forEach((key) => {
+        match[key] = { $all: query[key].split(',') }
+      })
+
+    match.uploader = userId
+
+    const scores = await Score.find(match)
+      .limit(9)
+      .skip(page * 9)
+      .sort(sorter[order])
+
+    const total = await Score.countDocuments(match)
+
+    ctx.body = {
+      content: scores,
+      total,
+    }
+  }
+
   async findById(ctx) {
     const score = await Score.findById(ctx.params.id).populate('uploader')
     if (!score) {

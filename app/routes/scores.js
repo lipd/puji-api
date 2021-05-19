@@ -6,6 +6,8 @@ const router = new Router({ prefix: '/scores' })
 
 router.get('/', controller.find)
 
+router.get('/mine', auth, controller.findMine)
+
 router.get('/:id', controller.findById)
 
 router.post('/', auth, controller.create)
