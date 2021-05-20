@@ -1,4 +1,5 @@
 const User = require('../models/users')
+const Score = require('../models/scores')
 
 const sorter = [
   undefined,
@@ -83,7 +84,15 @@ class UsersController {
 
   async favorite(ctx) {
     const user = await User.findById(ctx.state.user._id).select('+favorites')
+
     if (!user.favorites.map((id) => id.toString()).includes(ctx.params.id)) {
+      const score = await Score.findByIdAndUpdate(ctx.params.id, {
+        $inc: { favorites: 1 },
+      })
+      if (!score) {
+        ctx.throw(404, '乐谱不存在')
+      }
+
       user.favorites.push(ctx.params.id)
       user.save()
     }
@@ -93,10 +102,18 @@ class UsersController {
 
   async unfavorite(ctx) {
     const user = await User.findById(ctx.state.user._id).select('+favorites')
+
     const index = user.favorites
       .map((id) => id.toString())
       .indexOf(ctx.params.id)
     if (index > -1) {
+      const score = await Score.findByIdAndUpdate(ctx.params.id, {
+        $inc: { favorites: -1 },
+      })
+      if (!score) {
+        ctx.throw(404, '乐谱不存在')
+      }
+
       user.favorites.splice(index, 1)
       user.save()
     }
@@ -106,7 +123,15 @@ class UsersController {
 
   async like(ctx) {
     const user = await User.findById(ctx.state.user._id).select('+likings')
+
     if (!user.likings.map((id) => id.toString()).includes(ctx.params.id)) {
+      const score = await Score.findByIdAndUpdate(ctx.params.id, {
+        $inc: { likes: 1 },
+      })
+      if (!score) {
+        ctx.throw(404, '乐谱不存在')
+      }
+
       user.likings.push(ctx.params.id)
       user.save()
     }
@@ -116,8 +141,17 @@ class UsersController {
 
   async unlike(ctx) {
     const user = await User.findById(ctx.state.user._id).select('+likings')
+
     const index = user.likings.map((id) => id.toString()).indexOf(ctx.params.id)
     if (index > -1) {
+      const score = await Score.findByIdAndUpdate(ctx.params.id, {
+        $inc: { likes: -1 },
+      })
+
+      if (!score) {
+        ctx.throw(404, '乐谱不存在')
+      }
+
       user.likings.splice(index, 1)
       user.save()
     }

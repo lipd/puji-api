@@ -73,7 +73,34 @@ class ScoresController {
     if (!score) {
       ctx.throw(404, '乐谱不存在')
     }
-    ctx.body = score
+
+    const status = {
+      liked: false,
+      favorited: false,
+    }
+
+    if (ctx.state.id) {
+      const user = await User.findById(ctx.state.id).select(
+        '+favorites +likings',
+      )
+
+      if (!user) ctx.throw(404, '用户不存在')
+
+      const favorited = user.favorites
+        .map((id) => id.toString())
+        .includes(ctx.params.id)
+      const liked = user.likings
+        .map((id) => id.toString())
+        .includes(ctx.params.id)
+
+      status.liked = liked
+      status.favorited = favorited
+    }
+
+    ctx.body = {
+      content: score,
+      status,
+    }
   }
 
   async create(ctx) {

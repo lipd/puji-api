@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const controller = require('../controllers/scores')
-const { auth } = require('../middleware/auth')
+const { auth, getUserId } = require('../middleware/auth')
 
 const router = new Router({ prefix: '/scores' })
 
@@ -8,7 +8,7 @@ router.get('/', controller.find)
 
 router.get('/mine', auth, controller.findMine)
 
-router.get('/:id', controller.findById)
+router.get('/:id', getUserId, controller.findById)
 
 router.post('/', auth, controller.create)
 
