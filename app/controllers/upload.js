@@ -43,6 +43,22 @@ class UploadContorller {
       ctx.throw(500, '无法连接到 OSS 服务')
     }
   }
+
+  async cover(ctx) {
+    const file = ctx.request.files.file
+    if (!file) {
+      ctx.throw(400, '文件上传方式错误')
+    }
+    const basename = path.basename(file.path).slice(7)
+    try {
+      const result = await ctx.oss.put(`scores/${basename}`, file.path)
+      await unlink(file.path)
+      ctx.body = result
+    } catch (err) {
+      await unlink(file.path)
+      ctx.throw(500, '无法连接到 OSS 服务')
+    }
+  }
 }
 
 async function listBuckets() {

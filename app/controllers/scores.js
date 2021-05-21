@@ -107,7 +107,7 @@ class ScoresController {
     ctx.verifyParams({
       name: { type: 'string', required: true },
       xmlUrl: { type: 'string', required: true },
-      cover: { type: 'string', required: false },
+      cover: { type: 'string', required: true },
       author: { type: 'string', required: true },
       instruments: { type: 'array', itemType: 'string', required: false },
       genres: { type: 'array', itemType: 'string', required: false },

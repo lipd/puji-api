@@ -5,7 +5,7 @@ const scoreSchema = new Schema(
     __v: { type: Number, select: false },
     name: { type: String, required: true },
     xmlUrl: { type: String, required: true },
-    cover: { type: String, required: false },
+    cover: { type: String, required: true },
     author: { type: String, required: true },
     instruments: { type: [{ type: String }], required: false },
     genres: { type: [{ type: String }], required: false },
