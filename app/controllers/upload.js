@@ -51,7 +51,7 @@ class UploadContorller {
     }
     const basename = path.basename(file.path).slice(7)
     try {
-      const result = await ctx.oss.put(`scores/${basename}`, file.path)
+      const result = await ctx.oss.put(`covers/${basename}`, file.path)
       await unlink(file.path)
       ctx.body = result
     } catch (err) {
