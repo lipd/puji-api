@@ -55,7 +55,11 @@ app.use(
   }),
 )
 app.use(parameter(app))
-app.use(cors())
+app.use(
+  cors({
+    maxAge: 86400,
+  }),
+)
 
 routing(app)
 
