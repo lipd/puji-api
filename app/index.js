@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'production') {
   const certPath = path.resolve(__dirname, '../cert.pem')
   const options = {
     key: fs.readFileSync(keyPath),
-    certPath: fs.readFileSync(certPath),
+    cert: fs.readFileSync(certPath),
   }
   https.createServer(options, app.callback()).listen(443, () => {
     console.log('https server is running')
