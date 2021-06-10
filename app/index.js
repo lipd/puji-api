@@ -7,6 +7,9 @@ const mongoose = require('mongoose')
 let OSS = require('ali-oss')
 const routing = require('./routes')
 const path = require('path')
+const fs = require('fs')
+const https = require('https')
+
 const {
   connectionUrl,
   port,
@@ -63,6 +66,18 @@ app.use(
 
 routing(app)
 
-app.listen(port, () => {
-  console.log('server is running on http://localhost:3005')
-})
+if (process.env.NODE_ENV === 'production') {
+  const keyPath = path.resolve(__dirname, '../private.key')
+  const certPath = path.resolve(__dirname, '../cert.pem')
+  const options = {
+    key: fs.readFileSync(keyPath),
+    certPath: fs.readFileSync(certPath),
+  }
+  https.createServer(options, app.callback()).listen(443, () => {
+    console.log('https server is running')
+  })
+} else {
+  app.listen(port, () => {
+    console.log('server is running on http://localhost:3005')
+  })
+}

@@ -2,3 +2,5 @@ node_modules
 .env
 yarn-error.log
 app/public/uploads
+private.key
+cert.pem
